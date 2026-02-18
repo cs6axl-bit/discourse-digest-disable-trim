@@ -10,7 +10,7 @@ after_initialize do
   module ::DigestDisableTrim
     module UserNotificationsHelperPatch
       def email_excerpt(html_arg, post = nil)
-        if defined?(@popular_topics) && @popular_topics.respond_to?(:size) && @popular_topics.size == 1
+        if defined?(@popular_topics) && @popular_topics.respond_to?(:size) && @popular_topics.size < 3
           html = html_arg.to_s
           return PrettyText.format_for_email(html, post).html_safe
         end
