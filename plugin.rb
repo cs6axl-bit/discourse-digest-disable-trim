@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
 # name: discourse-digest-disable-trim
-# about: Disables trimming of topic text excerpts used in digest emails (passes full cooked HTML to email formatter)
-# version: 1.0.0
+# about: Disables trimming of topic text excerpts used in digest emails (passes full cooked HTML to email formatter) only when digest has exactly 1 popular topic
+# version: 1.2.0
 # authors: you
 # required_version: 3.0.0
 
 after_initialize do
-  # Core trims digest excerpts via UserNotificationsHelper#email_excerpt
-  # (it uses first_paragraphs_from(...) before PrettyText.format_for_email).
-  # We override it to pass the full html_arg through untrimmed.
   module ::DigestDisableTrim
     module UserNotificationsHelperPatch
       def email_excerpt(html_arg, post = nil)
-        html = html_arg.to_s
-        PrettyText.format_for_email(html, post).html_safe
+        if defined?(@popular_topics) && @popular_topics.respond_to?(:size) && @popular_topics.size == 1
+          html = html_arg.to_s
+          return PrettyText.format_for_email(html, post).html_safe
+        end
+
+        super
       end
     end
   end
