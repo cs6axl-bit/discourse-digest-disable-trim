@@ -1,0 +1,29 @@
+plugins:
+  digest_disable_trim_enabled:
+    default: true
+    client: false
+
+  # Mode of operation:
+  # - "count": disable trimming when @popular_topics.size <= digest_disable_trim_max_popular_topics
+  # - "tags":  disable trimming only for topics that have ANY tag in digest_disable_trim_tags_csv
+  digest_disable_trim_mode:
+    default: "count"
+    type: enum
+    choices:
+      - "count"
+      - "tags"
+    client: false
+
+  # Used only when mode = "count"
+  digest_disable_trim_max_popular_topics:
+    default: 1
+    min: 0
+    max: 50
+    client: false
+
+  # Used only when mode = "tags"
+  # Comma-separated list. Example: "promo,superpromo,hardsale"
+  digest_disable_trim_tags_csv:
+    default: ""
+    type: text
+    client: false
